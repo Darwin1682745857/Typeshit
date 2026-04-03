@@ -607,32 +607,105 @@
             });
         });
 
-        // World Clock Data
+        // World Clock Data - Comprehensive List
         const worldClocks = [
+            // Asia
             { city: 'Phnom Penh', country: 'Cambodia', timezone: 'Asia/Phnom_Penh', flag: '🇰🇭' },
+            { city: 'Bangkok', country: 'Thailand', timezone: 'Asia/Bangkok', flag: '🇹🇭' },
+            { city: 'Hanoi', country: 'Vietnam', timezone: 'Asia/Ho_Chi_Minh', flag: '🇻🇳' },
+            { city: 'Jakarta', country: 'Indonesia', timezone: 'Asia/Jakarta', flag: '🇮🇩' },
             { city: 'Kuala Lumpur', country: 'Malaysia', timezone: 'Asia/Kuala_Lumpur', flag: '🇲🇾' },
-            { city: 'Ho Chi Minh', country: 'Vietnam', timezone: 'Asia/Ho_Chi_Minh', flag: '🇻🇳' },
+            { city: 'Manila', country: 'Philippines', timezone: 'Asia/Manila', flag: '🇵🇭' },
             { city: 'Singapore', country: 'Singapore', timezone: 'Asia/Singapore', flag: '🇸🇬' },
             { city: 'Tokyo', country: 'Japan', timezone: 'Asia/Tokyo', flag: '🇯🇵' },
             { city: 'Seoul', country: 'South Korea', timezone: 'Asia/Seoul', flag: '🇰🇷' },
             { city: 'Beijing', country: 'China', timezone: 'Asia/Shanghai', flag: '🇨🇳' },
+            { city: 'Taipei', country: 'Taiwan', timezone: 'Asia/Taipei', flag: '🇹🇼' },
             { city: 'Hong Kong', country: 'Hong Kong', timezone: 'Asia/Hong_Kong', flag: '🇭🇰' },
             { city: 'Dubai', country: 'UAE', timezone: 'Asia/Dubai', flag: '🇦🇪' },
+            { city: 'Riyadh', country: 'Saudi Arabia', timezone: 'Asia/Riyadh', flag: '🇸🇦' },
+            { city: 'Doha', country: 'Qatar', timezone: 'Asia/Qatar', flag: '🇶🇦' },
+            { city: 'Tehran', country: 'Iran', timezone: 'Asia/Tehran', flag: '🇮🇷' },
+            { city: 'Tel Aviv', country: 'Israel', timezone: 'Asia/Jerusalem', flag: '🇮🇱' },
+            { city: 'Amman', country: 'Qatar', timezone: 'Asia/Amman', flag: '🇯🇴' },
             { city: 'Mumbai', country: 'India', timezone: 'Asia/Kolkata', flag: '🇮🇳' },
-            { city: 'Moscow', country: 'Russia', timezone: 'Europe/Moscow', flag: '🇷🇺' },
-            { city: 'Istanbul', country: 'Turkey', timezone: 'Europe/Istanbul', flag: '🇹🇷' },
-            { city: 'London', country: 'United Kingdom', timezone: 'Europe/London', flag: '🇬🇧' },
+            { city: 'Islamabad', country: 'Pakistan', timezone: 'Asia/Karachi', flag: '🇵🇰' },
+            { city: 'Dhaka', country: 'Bangladesh', timezone: 'Asia/Dhaka', flag: '🇧🇩' },
+            { city: 'Colombo', country: 'Sri Lanka', timezone: 'Asia/Colombo', flag: '🇱🇰' },
+            { city: 'Kathmandu', country: 'Nepal', timezone: 'Asia/Kathmandu', flag: '🇳🇵' },
+            { city: 'Kabul', country: 'Nepal', timezone: 'Asia/Kabul', flag: '🇦🇫' },
+
+            // Europe
+            { city: 'London', country: 'UK', timezone: 'Europe/London', flag: '🇬🇧' },
+            { city: 'Edinburgh', country: 'UK', timezone: 'Europe/London', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
             { city: 'Paris', country: 'France', timezone: 'Europe/Paris', flag: '🇫🇷' },
             { city: 'Berlin', country: 'Germany', timezone: 'Europe/Berlin', flag: '🇩🇪' },
+            { city: 'Rome', country: 'Italy', timezone: 'Europe/Rome', flag: '🇮🇹' },
+            { city: 'Madrid', country: 'Spain', timezone: 'Europe/Madrid', flag: '🇪🇸' },
             { city: 'Amsterdam', country: 'Netherlands', timezone: 'Europe/Amsterdam', flag: '🇳🇱' },
-            { city: 'New York', country: 'United States', timezone: 'America/New_York', flag: '🇺🇸' },
-            { city: 'Los Angeles', country: 'United States', timezone: 'America/Los_Angeles', flag: '🇺🇸' },
-            { city: 'Chicago', country: 'United States', timezone: 'America/Chicago', flag: '🇺🇸' },
+            { city: 'Brussels', country: 'Belgium', timezone: 'Europe/Brussels', flag: '🇧🇪' },
+            { city: 'Vienna', country: 'Austria', timezone: 'Europe/Vienna', flag: '🇦🇹' },
+            { city: 'Zurich', country: 'Switzerland', timezone: 'Europe/Zurich', flag: '🇨🇭' },
+            { city: 'Stockholm', country: 'Sweden', timezone: 'Europe/Stockholm', flag: '🇸🇪' },
+            { city: 'Oslo', country: 'Norway', timezone: 'Europe/Oslo', flag: '🇳🇴' },
+            { city: 'Copenhagen', country: 'Denmark', timezone: 'Europe/Copenhagen', flag: '🇩🇰' },
+            { city: 'Helsinki', country: 'Finland', timezone: 'Europe/Helsinki', flag: '🇫🇮' },
+            { city: 'Dublin', country: 'Ireland', timezone: 'Europe/Dublin', flag: '🇮🇪' },
+            { city: 'Lisbon', country: 'Ireland', timezone: 'Europe/Lisbon', flag: '🇵🇹' },
+            { city: 'Warsaw', country: 'Poland', timezone: 'Europe/Warsaw', flag: '🇵🇱' },
+            { city: 'Prague', country: 'Czech', timezone: 'Europe/Prague', flag: '🇨🇿' },
+            { city: 'Budapest', country: 'Hungary', timezone: 'Europe/Budapest', flag: '🇭🇺' },
+            { city: 'Athens', country: 'Greece', timezone: 'Europe/Athens', flag: '🇬🇷' },
+            { city: 'Istanbul', country: 'Turkey', timezone: 'Europe/Istanbul', flag: '🇹🇷' },
+            { city: 'Moscow', country: 'Russia', timezone: 'Europe/Moscow', flag: '🇷🇺' },
+            { city: 'Kyiv', country: 'Ukraine', timezone: 'Europe/Kyiv', flag: '🇺🇦' },
+
+            // North America
+            { city: 'New York', country: 'USA', timezone: 'America/New_York', flag: '🇺🇸' },
+            { city: 'Washington D.C.', country: 'USA', timezone: 'America/New_York', flag: '🇺🇸' },
+            { city: 'Los Angeles', country: 'USA', timezone: 'America/Los_Angeles', flag: '🇺🇸' },
+            { city: 'California', country: 'USA', timezone: 'America/Los_Angeles', flag: '🇺🇸' },
+            { city: 'San Francisco', country: 'USA', timezone: 'America/Los_Angeles', flag: '🇺🇸' },
+            { city: 'Chicago', country: 'USA', timezone: 'America/Chicago', flag: '🇺🇸' },
+            { city: 'Houston', country: 'USA', timezone: 'America/Chicago', flag: '🇺🇸' },
+            { city: 'Phoenix', country: 'USA', timezone: 'America/Phoenix', flag: '🇺🇸' },
+            { city: 'Denver', country: 'USA', timezone: 'America/Denver', flag: '🇺🇸' },
+            { city: 'Miami', country: 'USA', timezone: 'America/Chicago', flag: '🇺🇸' },
+            { city: 'Seattle', country: 'USA', timezone: 'America/Los_Angeles', flag: '🇺🇸' },
             { city: 'Toronto', country: 'Canada', timezone: 'America/Toronto', flag: '🇨🇦' },
+            { city: 'Vancouver', country: 'Canada', timezone: 'America/Vancouver', flag: '🇨🇦' },
+            { city: 'Montreal', country: 'Canada', timezone: 'America/Toronto', flag: '🇨🇦' },
+            { city: 'Mexico City', country: 'Mexico', timezone: 'America/Mexico_City', flag: '🇲🇽' },
+            { city: 'Havana', country: 'Cuba', timezone: 'America/Havana', flag: '🇨🇺' },
+
+            // South America
             { city: 'São Paulo', country: 'Brazil', timezone: 'America/Sao_Paulo', flag: '🇧🇷' },
+            { city: 'Rio de Janeiro', country: 'Brazil', timezone: 'America/Sao_Paulo', flag: '🇧🇷' },
             { city: 'Buenos Aires', country: 'Argentina', timezone: 'America/Argentina/Buenos_Aires', flag: '🇦🇷' },
+            { city: 'Bogotá', country: 'Colombia', timezone: 'America/Bogota', flag: '🇨🇴' },
+            { city: 'Lima', country: 'Peru', timezone: 'America/Lima', flag: '🇵🇪' },
+            { city: 'Santiago', country: 'Chile', timezone: 'America/Santiago', flag: '🇨🇱' },
+            { city: 'Caracas', country: 'Venezuela', timezone: 'America/Caracas', flag: '🇻🇪' },
+            { city: 'Quito', country: 'Colombia', timezone: 'America/Guayaquil', flag: '🇪🇨' },
+
+            // Africa
+            { city: 'Cairo', country: 'Egypt', timezone: 'Africa/Cairo', flag: '🇪🇬' },
+            { city: 'Johannesburg', country: 'South Africa', timezone: 'Africa/Johannesburg', flag: '🇿🇦' },
+            { city: 'Cape Town', country: 'South Africa', timezone: 'Africa/Johannesburg', flag: '🇿🇦' },
+            { city: 'Lagos', country: 'Nigeria', timezone: 'Africa/Lagos', flag: '🇳🇬' },
+            { city: 'Nairobi', country: 'Kenya', timezone: 'Africa/Nairobi', flag: '🇰🇪' },
+            { city: 'Casablanca', country: 'Morocco', timezone: 'Africa/Casablanca', flag: '🇲🇦' },
+            { city: 'Addis Ababa', country: 'Ethiopia', timezone: 'Africa/Addis_Ababa', flag: '🇪🇹' },
+            { city: 'Accra', country: 'Ghana', timezone: 'Africa/Accra', flag: '🇬🇭' },
+
+            // Oceania
             { city: 'Sydney', country: 'Australia', timezone: 'Australia/Sydney', flag: '🇦🇺' },
-            { city: 'Auckland', country: 'New Zealand', timezone: 'Pacific/Auckland', flag: '🇳🇿' }
+            { city: 'Melbourne', country: 'Australia', timezone: 'Australia/Melbourne', flag: '🇦🇺' },
+            { city: 'Brisbane', country: 'Australia', timezone: 'Australia/Brisbane', flag: '🇦🇺' },
+            { city: 'Perth', country: 'Australia', timezone: 'Australia/Perth', flag: '🇦🇺' },
+            { city: 'Auckland', country: 'New Zealand', timezone: 'Pacific/Auckland', flag: '🇳🇿' },
+            { city: 'Wellington', country: 'New Zealand', timezone: 'Pacific/Auckland', flag: '🇳🇿' },
+            { city: 'Suva', country: 'Fiji', timezone: 'Pacific/Fiji', flag: '🇫🇯' }
         ];
 
         // International Holidays 2026
