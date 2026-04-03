@@ -5,15 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer - UR-Schedule</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* Ultra-Clean Professional Productivity Theme Override */
+        :root {
+            --bg-color: #e2e8f0; 
+            --text-color: #0f172a;
+            --text-muted: #475569; 
+            --card-bg-color: #ffffff;
+            --border-color: #cbd5e1; 
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08); 
+            --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.12);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg-color: #1e293b;
+            --border-color: #334155;
+            --text-muted: #94a3b8;
+            --current-highlight: rgba(16, 185, 129, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-color);
+        }
+
         /* Timer Page Styles */
         .timer-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 100px);
+            min-height: calc(100vh - 40px);
             padding: 24px;
         }
 
@@ -25,6 +52,13 @@
             text-align: center;
             max-width: 500px;
             width: 100%;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .timer-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .timer-tabs {
@@ -34,6 +68,7 @@
             background: var(--bg-color);
             padding: 6px;
             border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
         }
 
         .timer-tab {
@@ -41,81 +76,86 @@
             padding: 12px 16px;
             border: none;
             background: transparent;
-            color: var(--accent-color);
+            color: var(--text-muted);
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            border-radius: var(--radius-sm);
+            border-radius: 6px;
             transition: all 0.2s ease;
         }
 
         .timer-tab.active {
             background: var(--card-bg-color);
-            color: var(--primary-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+            font-weight: 600;
         }
 
         .timer-tab:hover:not(.active) {
             color: var(--text-color);
+            background: var(--border-color);
         }
 
         .timer-display {
-            font-size: 5rem;
+            font-size: 5.5rem;
             font-weight: 700;
             color: var(--text-color);
             font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            margin-bottom: 16px;
-            letter-spacing: -2px;
+            margin-bottom: 0; /* Changed from 16px */
+            letter-spacing: -3px;
         }
 
         .timer-label {
-            font-size: 0.9rem;
-            color: var(--accent-color);
-            margin-bottom: 32px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 0; /* Changed from 32px */
+            font-weight: 500;
+            margin-top: -10px; /* Pull it slightly closer to the big numbers */
         }
 
         .timer-controls {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             justify-content: center;
             margin-bottom: 24px;
         }
 
         .timer-btn {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            border: none;
-            font-size: 1.2rem;
+            border: 1px solid var(--border-color);
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: var(--bg-color);
+            color: var(--text-muted);
         }
 
         .timer-btn.primary {
             background: var(--primary-color);
             color: white;
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             font-size: 1.5rem;
+            border: none;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
         }
 
         .timer-btn.primary:hover {
             background: var(--primary-hover);
-            transform: scale(1.05);
-        }
-
-        .timer-btn.secondary {
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.4);
         }
 
         .timer-btn.secondary:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            border-color: var(--text-color);
+            color: var(--text-color);
+            background: var(--border-color);
         }
 
         .timer-btn.danger {
@@ -135,6 +175,8 @@
             justify-content: center;
             margin-bottom: 24px;
             flex-wrap: wrap;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
         }
 
         .setting-item {
@@ -143,42 +185,48 @@
 
         .setting-label {
             font-size: 0.75rem;
-            color: var(--accent-color);
-            margin-bottom: 6px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .setting-value {
             display: flex;
             align-items: center;
             gap: 8px;
+            background: var(--bg-color);
+            padding: 4px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
         }
 
         .setting-value button {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-color);
+            border: none;
+            background: var(--card-bg-color);
+            color: var(--text-muted);
             cursor: pointer;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .setting-value button:hover {
-            border-color: var(--primary-color);
             color: var(--primary-color);
+            transform: scale(1.1);
         }
 
         .setting-value span {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            min-width: 40px;
+            min-width: 32px;
             color: var(--text-color);
         }
 
@@ -187,24 +235,27 @@
             display: flex;
             gap: 8px;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
         }
 
         .session-dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: var(--border-color);
             transition: all 0.2s ease;
         }
 
         .session-dot.completed {
-            background: var(--success-color);
+            background: var(--primary-color);
         }
 
         .session-dot.current {
-            background: var(--primary-color);
-            box-shadow: 0 0 0 4px var(--current-highlight);
+            background: var(--card-bg-color);
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 0 2px var(--current-highlight);
         }
 
         /* Stopwatch Laps */
@@ -213,39 +264,58 @@
             overflow-y: auto;
             margin-top: 24px;
             text-align: left;
+            background: var(--bg-color);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 8px;
         }
 
         .lap-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 16px;
+            align-items: center;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            background: var(--card-bg-color);
+            border-radius: 6px;
+            margin-bottom: 4px;
         }
 
         .lap-item:last-child {
+            margin-bottom: 0;
             border-bottom: none;
         }
 
         .lap-number {
-            color: var(--accent-color);
+            color: var(--text-muted);
+            font-weight: 600;
+            width: 30px;
         }
 
         .lap-time {
             font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-color);
+            flex: 1;
+            text-align: center;
         }
 
         .lap-diff {
             color: var(--primary-color);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-weight: 500;
+            width: 80px;
+            text-align: right;
         }
 
         /* Progress Ring */
         .progress-ring-container {
             position: relative;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: center;
         }
 
         .progress-ring {
@@ -254,17 +324,18 @@
 
         .progress-ring circle {
             fill: none;
-            stroke-width: 8;
+            stroke-width: 6; /* Slightly thinner, more elegant ring */
         }
 
         .progress-ring .bg {
-            stroke: var(--border-color);
+            stroke: var(--bg-color); /* Matches inset color */
         }
 
         .progress-ring .progress {
             stroke: var(--primary-color);
             stroke-linecap: round;
             transition: stroke-dashoffset 0.3s ease;
+            filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4));
         }
 
         .timer-display-wrapper {
@@ -272,6 +343,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Hidden */
@@ -282,62 +357,79 @@
         /* Page Header */
         .page-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
         }
 
         .page-header h1 {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--text-color);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
+            letter-spacing: -0.5px;
         }
 
         .page-header h1 i {
             color: var(--primary-color);
+            background: var(--current-highlight);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 1.4rem;
         }
 
         .page-header p {
-            color: var(--accent-color);
-            font-size: 0.9rem;
-            margin-top: 4px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 8px;
+            font-weight: 500;
         }
     </style>
+    <script src="../js/theme-sync.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <i class="fas fa-calendar-check"></i>
-        </div>
+    <aside class="sidebar" id="sidebar">
+        <a href="homepage.html" class="sidebar-logo" title="Back to Home">
+            <i><div class="fas fa-layer-group"></div></i>
+            PlanTech
+        </a>
         <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-tab" title="Dashboard">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
+            <a href="dashboard.html" class="sidebar-tab" title="Overview Dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Summary</span>
             </a>
-            <a href="index.html" class="sidebar-tab" title="Schedule">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Schedule</span>
+            <a href="schedule.html" class="sidebar-tab" title="Task Manager">
+                <i class="fas fa-list-check"></i>
+                <span>Tasks</span>
             </a>
-            <a href="timer.html" class="sidebar-tab active" title="Timer">
-                <i class="fas fa-stopwatch"></i>
-                <span>Timer</span>
+            <a href="todo.html" class="sidebar-tab" title="To-Do List">
+                <i class="fas fa-check-square"></i>
+                <span>To-Do</span>
             </a>
-            <a href="khmer_calendar.html" class="sidebar-tab" title="Khmer Calendar">
-                <i class="fas fa-moon"></i>
-                <span>Khmer</span>
+            <a href="timer.html" class="sidebar-tab active" title="Focus Timer">
+                <i class="fas fa-crosshairs"></i>
+                <span>Focus</span>
             </a>
-            <a href="world_calendar.html" class="sidebar-tab" title="World Calendar">
+            <a href="khmer_calendar.html" class="sidebar-tab" title="Local Calendar">
+                <i class="fas fa-compass"></i>
+                <span>Local</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab" title="Global Time">
                 <i class="fas fa-globe-americas"></i>
-                <span>World</span>
+                <span>Global</span>
             </a>
         </nav>
         <div class="sidebar-bottom">
-            <button class="sidebar-tab theme-toggle" title="Toggle Theme" onclick="toggleTheme()">
+            <button id="dark-mode-toggle" class="sidebar-tab" title="Toggle Theme">
                 <i class="fas fa-moon"></i>
+                <span>Theme</span>
             </button>
+            <a href="#" class="sidebar-tab" title="Settings" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
         </div>
     </aside>
 
@@ -360,10 +452,10 @@
                 <!-- Pomodoro Timer -->
                 <div id="pomodoro-mode">
                     <div class="progress-ring-container">
-                        <svg class="progress-ring" width="220" height="220">
-                            <circle class="bg" cx="110" cy="110" r="100"></circle>
-                            <circle class="progress" id="pomodoro-progress" cx="110" cy="110" r="100" 
-                                stroke-dasharray="628" stroke-dashoffset="0"></circle>
+                        <svg class="progress-ring" width="300" height="300">
+                            <circle class="bg" cx="150" cy="150" r="140"></circle>
+                            <circle class="progress" id="pomodoro-progress" cx="150" cy="150" r="140" 
+                                stroke-dasharray="880" stroke-dashoffset="0"></circle>
                         </svg>
                         <div class="timer-display-wrapper">
                             <div class="timer-display" id="pomodoro-display">25:00</div>
@@ -485,25 +577,58 @@
 
     <script>
         // Theme handling
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector('#dark-mode-toggle i');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
         function toggleTheme() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const icon = document.querySelector('.theme-toggle i');
             if (isDark) {
                 document.documentElement.removeAttribute('data-theme');
-                icon.classList.replace('fa-sun', 'fa-moon');
+                updateThemeIcon('light');
                 localStorage.setItem('theme', 'light');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
+                updateThemeIcon('dark');
                 localStorage.setItem('theme', 'dark');
             }
         }
 
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const darkToggleBtn = document.getElementById('dark-mode-toggle');
+            if (darkToggleBtn) {
+                darkToggleBtn.addEventListener('click', toggleTheme);
+            }
+
+            // Load saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            }
+            
+            // Apply color theme
+            let colorTheme = localStorage.getItem('colorTheme') || 'default';
+            document.documentElement.setAttribute('data-color', colorTheme);
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'theme') {
+                    if (e.newValue === 'dark') {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        updateThemeIcon('dark');
+                    } else {
+                        document.documentElement.removeAttribute('data-theme');
+                        updateThemeIcon('light');
+                    }
+                }
+                if (e.key === 'colorTheme') {
+                    colorTheme = e.newValue || 'default';
+                    document.documentElement.setAttribute('data-color', colorTheme);
+                }
+            });
+        });
 
         // Tab switching
         const tabs = document.querySelectorAll('.timer-tab');
@@ -555,7 +680,7 @@
             
             // Update progress ring
             const progress = (totalPomodoroTime - pomodoroTime) / totalPomodoroTime;
-            const circumference = 628;
+            const circumference = 880;
             document.getElementById('pomodoro-progress').style.strokeDashoffset = circumference * (1 - progress);
         }
 
@@ -824,3 +949,4 @@
     </script>
 </body>
 </html>
+

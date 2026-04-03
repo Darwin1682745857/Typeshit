@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រតិទិនខ្មែរ - Khmer Calendar | UR-Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+           <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Ultra-Clean Professional Productivity Theme Override */
+        :root {
+            --bg-color: #e2e8f0; 
+            --text-color: #0f172a;
+            --text-muted: #475569; 
+            --card-bg-color: #ffffff;
+            --border-color: #cbd5e1; 
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08); 
+            --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.12);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg-color: #1e293b;
+            --border-color: #334155;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-color);
+        }
+
+        /* Khmer Calendar Specific Styles */
+         .khmer-font {
+             font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+        }
+
+        .calendar-header {
+            text-align: center;
+            padding: 2.5rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+        }
+
+        .khmer-date-display {
+            font-size: 1.7rem;
+            font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gregorian-date {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .buddhist-year {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .zodiac-info {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-top: 1.2rem;
+            font-size: 0.95rem;
+            background: rgba(0,0,0,0.1);
+            padding: 8px;
+            border-radius: 20px;
+            display: inline-flex;
+        }
+
+        .zodiac-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zodiac-item i {
+            font-size: 1.2rem;
+            color: #fbbf24; /* Subtle gold accent */
+        }
+
+        /* Calendar Grid */
+        .calendar-container {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .calendar-nav h2 {
+            font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+            font-size: 1.4rem;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-color);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--card-bg-color);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .weekday-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .weekday-header span {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 8px 0;
+        }
+
+        .weekday-header span:first-child {
+            color: #ef4444; /* Clean solid red for sunday */
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-color);
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            background: white;
+        }
+
+        .calendar-day.today {
+            background: var(--current-highlight);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .calendar-day.today .khmer-day {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+
+        .calendar-day.sunday {
+            color: #ef4444;
+        }
+
+        .calendar-day.holiday {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px dashed rgba(239, 68, 68, 0.3);
+        }
+        
+        .calendar-day.holiday:hover {
+            background: white;
+            border-color: #ef4444;
+        }
+
+        .calendar-day .gregorian-day {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .calendar-day .khmer-day {
+            font-family: 'Battambang', serif;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .calendar-day .moon-phase {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            font-size: 0.6rem;
+        }
+
+        /* Khmer Months Reference */
+        .months-reference {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .months-reference h3 {
+            font-family: 'Battambang', serif;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .months-reference h3 i {
+            color: var(--primary-color);
+        }
+
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .month-card {
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .month-card:hover {
+            border-color: var(--primary-color);
+            background: var(--card-bg-color);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+
+        .month-card.current {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .month-card .khmer-name {
+                font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .month-card .english-name {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            margin-top: 3px;
+        }
+
+        .month-card.current .english-name {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Holidays Section */
+        .holidays-section {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .holidays-section h3 {
+            font-family: 'Battambang', serif;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .holidays-section h3 i {
+            color: #ef4444; /* Red accent for holidays */
+        }
+
+        .holiday-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .holiday-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-color);
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: 1px solid var(--border-color);
+        }
+
+        .holiday-item:hover {
+            background: var(--card-bg-color);
+            border-color: #ef4444;
+            box-shadow: var(--shadow-sm);
+            transform: translateX(2px);
+        }
+
+        .holiday-date {
+            background: #ef4444;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 50px;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .holiday-date .day {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .holiday-date .month {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .holiday-info {
+            flex: 1;
+        }
+
+        .holiday-name {
+            font-weight: 600;
+                    font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+        }
+
+        .holiday-name-en {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        /* Page title bar for Khmer Calendar */
+        .page-title-bar {
+            background: var(--card-bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+                font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .page-title i {
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .calendar-day .gregorian-day {
+                font-size: 0.85rem;
+            }
+
+            .calendar-day .khmer-day {
+                font-size: 0.65rem;
+            }
+
+            .zodiac-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .months-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-day {
+                border-radius: 6px;
+            }
+
+            .months-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+    <script src="../js/theme-sync.js"></script>
+</head>
+<body>
+    <!-- Layered Sidebar Nav -->
+    <aside class="sidebar" id="sidebar">
+        <a href="homepage.html" class="sidebar-logo" title="Back to Home">
+            <i><div class="fas fa-layer-group"></div></i>
+            PlanTech
+        </a>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-tab" title="Overview Dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Summary</span>
+            </a>
+            <a href="schedule.html" class="sidebar-tab" title="Task Manager">
+                <i class="fas fa-list-check"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="todo.html" class="sidebar-tab" title="To-Do List">
+                <i class="fas fa-check-square"></i>
+                <span>To-Do</span>
+            </a>
+            <a href="timer.html" class="sidebar-tab" title="Focus Timer">
+                <i class="fas fa-crosshairs"></i>
+                <span>Focus</span>
+            </a>
+            <a href="khmer_calendar.html" class="sidebar-tab active" title="Local Calendar">
+                <i class="fas fa-compass"></i>
+                <span>Local</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab" title="Global Time">
+                <i class="fas fa-globe-americas"></i>
+                <span>Global</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <button id="dark-mode-toggle" class="sidebar-tab" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+                <span>Theme</span>
+            </button>
+            <a href="#" class="sidebar-tab" title="Settings" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <!-- Page Title -->
+        <div class="page-title-bar">
+            <div class="container">
+                <h1 class="page-title"><i class="fas fa-moon"></i> ប្រតិទិនខ្មែរ - Khmer Calendar</h1>
+            </div>
+        </div>
+
+        <main style="padding-bottom: 2rem;">
+            <div class="container">
+            <!-- Current Date Display -->
+            <div class="calendar-header">
+                <div class="khmer-date-display" id="khmer-date-full">រៀន ១រោច ខែមាឃ ឆ្នាំម្សាញ់ បញ្ចស័ក</div>
+                <div class="gregorian-date" id="gregorian-date">Wednesday, January 21, 2026</div>
+                <div class="buddhist-year" id="buddhist-year">ព.ស. ២៥៦៩</div>
+                <div class="zodiac-info">
+                    <div class="zodiac-item">
+                        <i class="fas fa-horse"></i>
+                        <span id="zodiac-animal">ឆ្នាំម្សាញ់ (សេះ)</span>
+                    </div>
+                    <div class="zodiac-item">
+                        <i class="fas fa-moon"></i>
+                        <span id="moon-phase">រោច ១កើត</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="calendar-container">
+                <div class="calendar-nav">
+                    <button class="calendar-nav-btn" id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <h2 id="current-month-display">ខែមាឃ ២០២៦</h2>
+                    <button class="calendar-nav-btn" id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="weekday-header">
+                    <span>អាទិត្យ</span>
+                    <span>ច័ន្ទ</span>
+                    <span>អង្គារ</span>
+                    <span>ពុធ</span>
+                    <span>ព្រហស្បតិ៍</span>
+                    <span>សុក្រ</span>
+                    <span>សៅរ៍</span>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Days will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Khmer Months Reference -->
+            <div class="months-reference">
+                <h3><i class="fas fa-calendar-alt"></i> ១២ខែខ្មែរ - Khmer Months</h3>
+                <div class="months-grid" id="months-grid">
+                    <!-- Months will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Upcoming Holidays -->
+            <div class="holidays-section">
+                <h3><i class="fas fa-star"></i> ថ្ងៃបុណ្យជិតមកដល់ - Upcoming Holidays</h3>
+                <div class="holiday-list" id="holiday-list">
+                    <!-- Holidays will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+    </div><!-- End main-wrapper -->
+
+    <script src="../js/khmer_calendar.js"></script>
+</body>
+</html>
+

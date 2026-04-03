@@ -206,14 +206,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== THEME ====================
     function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
         localStorage.setItem('theme', theme);
         isDarkMode = theme === 'dark';
-        const icon = darkModeToggle.querySelector('i');
-        if (icon) {
-            icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        if (darkModeToggle) {
+            const icon = darkModeToggle.querySelector('i');
+            if (icon) {
+                icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+            }
         }
     }
+    
+    function applyColorTheme(color) {
+        document.documentElement.setAttribute('data-color', color);
+        localStorage.setItem('colorTheme', color);
+    }
+
+    // Initialize color theme
+    const savedColorTheme = localStorage.getItem('colorTheme') || 'default';
+    applyColorTheme(savedColorTheme);
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+            applyTheme(e.newValue || 'light');
+        }
+        if (e.key === 'colorTheme') {
+            applyColorTheme(e.newValue || 'default');
+        }
+    });
 
     // ==================== UPDATE TODAY DISPLAY ====================
     function updateTodayDisplay() {

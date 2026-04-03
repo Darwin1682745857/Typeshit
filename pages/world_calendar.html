@@ -5,8 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Calendar - UR-Schedule</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* Ultra-Clean Professional Theme Override */
+        :root {
+            --bg-color: #e2e8f0; 
+            --text-color: #0f172a;
+            --text-muted: #475569; 
+            --card-bg-color: #ffffff;
+            --border-color: #cbd5e1; 
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08); 
+            --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.12);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg-color: #1e293b;
+            --border-color: #334155;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-color);
+        }
+
         /* World Calendar Specific Styles */
         .world-grid {
             display: grid;
@@ -339,39 +365,50 @@
             margin-top: 4px;
         }
     </style>
+    <script src="../js/theme-sync.js"></script>
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <i class="fas fa-calendar-check"></i>
-        </div>
+    <!-- Layered Sidebar Nav -->
+    <aside class="sidebar" id="sidebar">
+        <a href="homepage.html" class="sidebar-logo" title="Back to Home">
+            <i><div class="fas fa-layer-group"></div></i>
+            PlanTech
+        </a>
         <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-tab" title="Dashboard">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
+            <a href="dashboard.html" class="sidebar-tab" title="Overview Dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Summary</span>
             </a>
-            <a href="index.html" class="sidebar-tab" title="Schedule">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Schedule</span>
+            <a href="schedule.html" class="sidebar-tab" title="Task Manager">
+                <i class="fas fa-list-check"></i>
+                <span>Tasks</span>
             </a>
-            <a href="timer.html" class="sidebar-tab" title="Timer">
-                <i class="fas fa-stopwatch"></i>
-                <span>Timer</span>
+            <a href="todo.html" class="sidebar-tab" title="To-Do List">
+                <i class="fas fa-check-square"></i>
+                <span>To-Do</span>
             </a>
-            <a href="khmer_calendar.html" class="sidebar-tab" title="Khmer Calendar">
-                <i class="fas fa-moon"></i>
-                <span>Khmer</span>
+            <a href="timer.html" class="sidebar-tab" title="Focus Timer">
+                <i class="fas fa-crosshairs"></i>
+                <span>Focus</span>
             </a>
-            <a href="world_calendar.html" class="sidebar-tab active" title="World Calendar">
+            <a href="khmer_calendar.html" class="sidebar-tab" title="Local Calendar">
+                <i class="fas fa-compass"></i>
+                <span>Local</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab active" title="Global Time">
                 <i class="fas fa-globe-americas"></i>
-                <span>World</span>
+                <span>Global</span>
             </a>
         </nav>
         <div class="sidebar-bottom">
-            <button class="sidebar-tab theme-toggle" title="Toggle Theme" onclick="toggleTheme()">
+            <button id="dark-mode-toggle" class="sidebar-tab" title="Toggle Theme">
                 <i class="fas fa-moon"></i>
+                <span>Theme</span>
             </button>
+            <a href="#" class="sidebar-tab" title="Settings" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
         </div>
     </aside>
 
@@ -491,46 +528,84 @@
                         }
                     });
                     // Optionally, hide show-more button if search is active
-                    document.getElementById('show-more-clocks').style.display = term ? 'none' : '';
+                    const showMoreBtn = document.getElementById('show-more-clocks');
+                    if (showMoreBtn) showMoreBtn.style.display = term ? 'none' : '';
                 }
                 document.addEventListener('DOMContentLoaded', function() {
                     const searchInput = document.getElementById('clock-search');
                     const searchBtn = document.getElementById('clock-search-btn');
-                    searchInput.addEventListener('input', function(e) {
-                        clockSearchTerm = e.target.value;
-                        filterClocks();
-                    });
-                    searchBtn.addEventListener('click', function() {
-                        clockSearchTerm = searchInput.value;
-                        filterClocks();
-                    });
-                    searchInput.addEventListener('keypress', function(e) {
-                        if (e.key === 'Enter') {
+                    if (searchInput) {
+                        searchInput.addEventListener('input', function(e) {
+                            clockSearchTerm = e.target.value;
+                            filterClocks();
+                        });
+                        searchInput.addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') {
+                                clockSearchTerm = searchInput.value;
+                                filterClocks();
+                            }
+                        });
+                    }
+                    if (searchBtn) {
+                        searchBtn.addEventListener('click', function() {
                             clockSearchTerm = searchInput.value;
                             filterClocks();
-                        }
-                    });
+                        });
+                    }
+                    
+                    const darkToggleBtn = document.getElementById('dark-mode-toggle');
+                    if (darkToggleBtn) {
+                        darkToggleBtn.addEventListener('click', toggleTheme);
+                    }
                 });
+
         // Theme handling
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector('#dark-mode-toggle i');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
         function toggleTheme() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const icon = document.querySelector('.theme-toggle i');
             if (isDark) {
                 document.documentElement.removeAttribute('data-theme');
-                icon.classList.replace('fa-sun', 'fa-moon');
+                updateThemeIcon('light');
                 localStorage.setItem('theme', 'light');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
+                updateThemeIcon('dark');
                 localStorage.setItem('theme', 'dark');
             }
         }
 
         // Load saved theme
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            }
+            
+            let colorTheme = localStorage.getItem('colorTheme') || 'default';
+            document.documentElement.setAttribute('data-color', colorTheme);
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'theme') {
+                    if (e.newValue === 'dark') {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        updateThemeIcon('dark');
+                    } else {
+                        document.documentElement.removeAttribute('data-theme');
+                        updateThemeIcon('light');
+                    }
+                }
+                if (e.key === 'colorTheme') {
+                    colorTheme = e.newValue || 'default';
+                    document.documentElement.setAttribute('data-color', colorTheme);
+                }
+            });
+        });
 
         // World Clock Data
         const worldClocks = [
@@ -757,7 +832,11 @@
             const now = new Date();
             
             // Timezone name
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (timezone === 'Asia/Bangkok' || timezone === 'Asia/Saigon') {
+                // Manually map Indochina Time to Phnom Penh
+                timezone = 'Asia/Phnom_Penh';
+            }
             document.getElementById('local-timezone').textContent = timezone;
 
             // UTC Offset
@@ -786,3 +865,4 @@
     </script>
 </body>
 </html>
+

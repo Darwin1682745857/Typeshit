@@ -154,33 +154,85 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==================== THEME MANAGEMENT ====================
     let isDarkMode = localStorage.getItem('theme') === 'dark';
 
-    const applyTheme = (theme) => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
+// Function to dynamically update the browser's tab/UI color metadata
+    function updateMetaThemeColor() {
+        setTimeout(() => {
+            const computedStyle = getComputedStyle(document.documentElement);
+            const primaryColor = computedStyle.getPropertyValue('--primary-color').trim() || '#4f6ef7';
+            
+            let metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (!metaTheme) {
+                metaTheme = document.createElement('meta');
+                metaTheme.name = "theme-color";
+                document.head.appendChild(metaTheme);
+            }
+            metaTheme.content = primaryColor;
+        }, 50);
+    }
+
+    const applyTheme = (theme, skipStorage = false) => {
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');        
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+        if (!skipStorage) localStorage.setItem('theme', theme);
         isDarkMode = theme === 'dark';
         // Update icon
-        const icon = darkModeToggle.querySelector('i');
-        if (icon) {
-            icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        if (darkModeToggle) {
+            const icon = darkModeToggle.querySelector('i');
+            if (icon) {
+                icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';     
+            }
         }
+        updateMetaThemeColor();
     };
 
-    const applyColorTheme = (color) => {
+    const applyColorTheme = (color, skipStorage = false) => {
         document.documentElement.setAttribute('data-color', color);
-        localStorage.setItem('colorTheme', color);
-        colorBtns.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.theme === color);
-        });
+        if (!skipStorage) localStorage.setItem('colorTheme', color);
+        if (colorBtns) {
+            colorBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === color);    
+            });
+        }
+        updateMetaThemeColor();
     };
 
-    darkModeToggle.addEventListener('click', () => {
-        applyTheme(isDarkMode ? 'light' : 'dark');
+    // Cross-tab synchronization
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+            applyTheme(e.newValue, true);
+        } else if (e.key === 'colorTheme') {
+            applyColorTheme(e.newValue, true);
+        }
     });
 
-    colorBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            applyColorTheme(btn.dataset.theme);
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            applyTheme(isDarkMode ? 'light' : 'dark');
         });
+    }
+
+    if (colorBtns) {
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                applyColorTheme(btn.dataset.theme);
+            });
+        });
+    }
+    
+    // Initialize color theme
+    const savedColorTheme = localStorage.getItem('colorTheme') || 'default';
+    applyColorTheme(savedColorTheme);
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+            applyTheme(e.newValue || 'light');
+        }
+        if (e.key === 'colorTheme') {
+            applyColorTheme(e.newValue || 'default');
+        }
     });
 
     // ==================== DATA MANAGEMENT ====================

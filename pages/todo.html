@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List - PlanTech</title>
+    <link rel="icon" href="https://i.pinimg.com/736x/55/1e/94/551e94ae8845df9d455f221c07421dcd.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Ultra-Clean Professional Productivity Theme */
+        :root {
+            --bg-color: #e2e8f0;
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --card-bg-color: #ffffff;
+            --border-color: #cbd5e1;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08); /* Slightly stronger shadow to lift cards */
+            --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.12);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --card-bg-color: #1e293b;
+            --border-color: #334155;
+            --text-muted: #94a3b8;
+            --current-highlight: rgba(16, 185, 129, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header-text h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header-text h1 i {
+            color: var(--primary-color);
+        }
+
+        .page-header-text p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Todo Input Section */
+        .todo-input-container {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .todo-input {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: var(--text-color);
+            background: transparent;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .todo-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .category-dropdown {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0 24px;
+            height: 100%;
+            min-height: 45px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Todo Layout */
+        .todo-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Categories Navigation */
+        .categories-panel {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .panel-heading {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .category-item {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .category-item:hover {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .category-item.active {
+            background: var(--bg-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .category-icon {
+            width: 20px;
+        }
+
+        .category-badge {
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .category-item.active .category-badge {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Task List Area */
+        .todo-list-container {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .list-header h2 {
+            font-size: 1.25rem;
+            margin: 0;
+            color: var(--text-color);
+        }
+        
+        .clear-completed {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .clear-completed:hover {
+            color: var(--danger-color);
+        }
+
+        /* Clean List Design */
+        #todo-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--card-bg-color);
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            gap: 16px;
+        }
+
+        .todo-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transform: translateY(-1px);
+        }
+
+        /* Standard Checkbox */
+        .checkbox-container {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .checkbox-container:hover {
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-icon {
+            font-size: 12px;
+            color: transparent;
+            transition: color 0.2s;
+        }
+
+        .todo-item.completed .checkbox-container {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .todo-item.completed .checkbox-icon {
+            color: white;
+        }
+
+        .todo-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .todo-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .todo-item.completed .todo-text {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .todo-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Task Type Tags */
+        .todo-tag {
+            background: var(--bg-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .todo-item:hover .todo-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--border-color);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--text-color);
+        }
+        
+        .action-btn.delete:hover {
+            color: var(--danger-color);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon-wrap {
+            margin-bottom: 16px;
+        }
+
+        .empty-icon-wrap i {
+            font-size: 3rem;
+            color: var(--border-color);
+        }
+        
+        .empty-state h3 {
+            margin: 0 0 8px 0;
+            color: var(--text-color);
+        }
+
+        .empty-state p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .todo-layout {
+                grid-template-columns: 1fr;
+            }
+            .input-row {
+                flex-direction: column;
+            }
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 12px;
+            }
+        }
+    </style>
+    <script src="../js/theme-sync.js"></script>
+</head>
+<body>
+    <!-- Layered Sidebar Nav -->
+    <aside class="sidebar" id="sidebar">
+        <a href="homepage.html" class="sidebar-logo" title="Back to Home">
+            <i><div class="fas fa-layer-group"></div></i>
+            PlanTech
+        </a>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-tab" title="Overview Dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Summary</span>
+            </a>
+            <a href="schedule.html" class="sidebar-tab" title="Task Manager">
+                <i class="fas fa-list-check"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="todo.html" class="sidebar-tab active" title="To-Do List">
+                <i class="fas fa-check-square"></i>
+                <span>To-Do</span>
+            </a>
+            <a href="timer.html" class="sidebar-tab" title="Focus Timer">
+                <i class="fas fa-crosshairs"></i>
+                <span>Focus</span>
+            </a>
+            <a href="khmer_calendar.html" class="sidebar-tab" title="Local Calendar">
+                <i class="fas fa-compass"></i>
+                <span>Local</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab" title="Global Time">
+                <i class="fas fa-globe-americas"></i>
+                <span>Global</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <button id="dark-mode-toggle" class="sidebar-tab" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+                <span>Theme</span>
+            </button>
+            <a href="#" class="sidebar-tab" title="Settings" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-header-text">
+                    <h1><i class="fas fa-check-square"></i> To-Do List</h1>
+                    <p>Capture your thoughts, plan your projects, and stay organized.</p>
+                </div>
+            </div>
+
+            <div class="todo-input-container">
+                <div class="input-row">
+                    <input type="text" class="todo-input" id="new-todo-input" placeholder="What needs to be done? Press Enter to add...">
+                    <select class="category-dropdown" id="new-todo-category">
+                        <option value="Inbox">Inbox</option>
+                        <option value="Work">Work</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Shopping">Shopping</option>
+                    </select>
+                    <button class="add-btn" id="add-todo-btn">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+
+            <div class="todo-layout">
+                <!-- Categories Sidebar -->
+                <div class="categories-panel">
+                    <div class="panel-heading">Filters</div>
+                    <div class="category-item active" data-filter="All">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-inbox category-icon" style="color: var(--text-muted);"></i>
+                            <span>All Tasks</span>
+                        </div>
+                        <span class="category-badge" id="badge-all">0</span>
+                    </div>
+                    <div class="category-item" data-filter="Inbox">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-tray category-icon" style="color: var(--text-muted);"></i>
+                            <span>Inbox</span>
+                        </div>
+                        <span class="category-badge" id="badge-inbox">0</span>
+                    </div>
+                    
+                    <div class="panel-heading" style="margin-top: 16px;">Lists</div>
+                    <div class="category-item" data-filter="Work">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-briefcase category-icon" style="color: var(--text-muted);"></i>
+                            <span>Work</span>
+                        </div>
+                        <span class="category-badge" id="badge-work">0</span>
+                    </div>
+                    <div class="category-item" data-filter="Personal">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-user category-icon" style="color: var(--text-muted);"></i>
+                            <span>Personal</span>
+                        </div>
+                        <span class="category-badge" id="badge-personal">0</span>
+                    </div>
+                    <div class="category-item" data-filter="Shopping">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-shopping-cart category-icon" style="color: var(--text-muted);"></i>
+                            <span>Shopping</span>
+                        </div>
+                        <span class="category-badge" id="badge-shopping">0</span>
+                    </div>
+                </div>
+
+                <!-- Main Task List -->
+                <div class="todo-list-container">
+                    <div class="list-header">
+                        <h2 id="current-category">All Tasks</h2>
+                        <button class="clear-completed" id="clear-completed-btn">
+                            Clear Completed
+                        </button>
+                    </div>
+                    <div id="todo-list">
+                        <!-- Tasks will be rendered here by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const todoInput = document.getElementById('new-todo-input');
+            const categorySelect = document.getElementById('new-todo-category');
+            const addBtn = document.getElementById('add-todo-btn');
+            const todoList = document.getElementById('todo-list');
+            const categoryItems = document.querySelectorAll('.category-item');
+            const currentCategoryTitle = document.getElementById('current-category');
+            const clearCompletedBtn = document.getElementById('clear-completed-btn');
+
+            let todos = JSON.parse(localStorage.getItem('plantech-todos')) || [
+                { id: 1, text: 'Review weekly schedule', category: 'Work', completed: false, date: new Date().toLocaleDateString() },
+                { id: 2, text: 'Buy groceries', category: 'Shopping', completed: false, date: new Date().toLocaleDateString() },
+                { id: 3, text: 'Call mom', category: 'Personal', completed: true, date: new Date().toLocaleDateString() }
+            ];
+            
+            let currentFilter = 'All';
+
+            function saveTodos() {
+                localStorage.setItem('plantech-todos', JSON.stringify(todos));
+                updateBadges();
+            }
+
+            function updateBadges() {
+                const countCategory = (cat) => todos.filter(t => cat === 'All' ? !t.completed : t.category === cat && !t.completed).length;
+                document.getElementById('badge-all').innerText = countCategory('All');
+                document.getElementById('badge-inbox').innerText = countCategory('Inbox');
+                document.getElementById('badge-work').innerText = countCategory('Work');
+                document.getElementById('badge-personal').innerText = countCategory('Personal');
+                document.getElementById('badge-shopping').innerText = countCategory('Shopping');
+            }
+
+            function renderTodos() {
+                todoList.innerHTML = '';
+                const filteredTodos = todos.filter(t => currentFilter === 'All' || t.category === currentFilter);
+
+                if (filteredTodos.length === 0) {
+                    todoList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon-wrap">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h3>All caught up!</h3>
+                            <p>No tasks found in ${currentFilter}.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                filteredTodos.forEach(todo => {
+                    const el = document.createElement('div');
+                    el.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                    el.innerHTML = `
+                        <div class="checkbox-container" onclick="toggleTodo(${todo.id})">
+                            <i class="fas fa-check checkbox-icon"></i>
+                        </div>
+                        <div class="todo-content">
+                            <div class="todo-text">${todo.text}</div>
+                            <div class="todo-meta">
+                                <span class="todo-tag"><i class="fas fa-tag" style="margin-right:4px;"></i>${todo.category}</span>
+                                <span><i class="fas fa-calendar-alt" style="margin-right:4px;"></i>${todo.date}</span>
+                            </div>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="action-btn delete" title="Delete Task" onclick="deleteTodo(${todo.id})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    todoList.appendChild(el);
+                });
+            }
+
+            window.toggleTodo = (id) => {
+                const todo = todos.find(t => t.id === id);
+                if (todo) {
+                    todo.completed = !todo.completed;
+                    saveTodos();
+                    renderTodos();
+                }
+            };
+
+            window.deleteTodo = (id) => {
+                todos = todos.filter(t => t.id !== id);
+                saveTodos();
+                renderTodos();
+            };
+
+            function addTodo() {
+                const text = todoInput.value.trim();
+                if (!text) return;
+                
+                const category = categorySelect.value;
+                const newTodo = {
+                    id: Date.now(),
+                    text,
+                    category,
+                    completed: false,
+                    date: new Date().toLocaleDateString()
+                };
+
+                todos.unshift(newTodo);
+                todoInput.value = '';
+                saveTodos();
+                renderTodos();
+            }
+
+            addBtn.addEventListener('click', addTodo);
+            todoInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addTodo();
+            });
+
+            categoryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    categoryItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    currentFilter = item.getAttribute('data-filter');
+                    currentCategoryTitle.innerText = currentFilter === 'All' ? 'All Tasks' : currentFilter;
+                    renderTodos();
+                });
+            });
+
+            clearCompletedBtn.addEventListener('click', () => {
+                todos = todos.filter(t => !t.completed);
+                saveTodos();
+                renderTodos();
+            });
+
+            // Initial render
+            saveTodos();
+            renderTodos();
+
+            // Theme handling
+            const darkToggleBtn = document.getElementById('dark-mode-toggle');
+            
+            function updateThemeIcon(theme) {
+                const icon = document.querySelector('#dark-mode-toggle i');
+                if (icon) {
+                    icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+
+            function toggleTheme() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    updateThemeIcon('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    updateThemeIcon('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+
+            if (darkToggleBtn) {
+                darkToggleBtn.addEventListener('click', toggleTheme);
+            }
+
+            // Load saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            }
+            
+            // Apply color theme
+            let colorTheme = localStorage.getItem('colorTheme') || 'default';
+            document.documentElement.setAttribute('data-color', colorTheme);
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'theme') {
+                    if (e.newValue === 'dark') {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        updateThemeIcon('dark');
+                    } else {
+                        document.documentElement.removeAttribute('data-theme');
+                        updateThemeIcon('light');
+                    }
+                }
+                if (e.key === 'colorTheme') {
+                    colorTheme = e.newValue || 'default';
+                    document.documentElement.setAttribute('data-color', colorTheme);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
